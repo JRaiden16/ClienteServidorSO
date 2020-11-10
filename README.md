@@ -1,1 +1,6 @@
 # ClienteServidorSO
+## Descripción
+
+## Observaciones
+
+### Bibliografía

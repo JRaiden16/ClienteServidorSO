@@ -11,16 +11,25 @@ inotify_demo.c
 
    Licensed under the GNU General Public License, version 2 or later.
 */
-
+#include<fcntl.h> //Para las descripciones de los directorios
+#include <sys/inotify.h>
+#include <sys/types.h>
+#include <sys/stat.h>
 #include <sys/inotify.h>
 #include <limits.h>
+#include <signal.h>
 #include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
 #include <unistd.h>
+#include "utmp.h"
 
+#DEFINE MAXIMO 1024
 static void     /* Display information from inotify_event structure */
+
 displayInotifyEvent(struct inotify_event *i)
 {
+
     //open socket_client
     printf("    wd =%2d; ", i->wd);
     if (i->cookie > 0)
@@ -65,14 +74,20 @@ displayInotifyEvent(struct inotify_event *i)
 int
 main(int argc, char *argv[])
 {
+    int tuberIda[4]; int tuberVuelta[4];
+    char msg[MAXIMO]; char address[MAXIMO];
+    pidt_t procid;
+
     int inotifyFd, wd, j;
     char buf[BUF_LEN] __attribute__ ((aligned(8)));
+
     ssize_t numRead;
     char *p;
+
     struct inotify_event *event;
 
     if (argc < 2) {
-        fprintf(stderr, "Usage: %s pathname...\n", argv[0]);
+        fprintf(stderr, "Usage: %s ClienteServidorSO/Proyecto/\n", argv[0]);
         exit(EXIT_FAILURE);
     }
 
